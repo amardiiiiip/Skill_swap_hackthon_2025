@@ -1,0 +1,85 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.header a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+.header select, .header input, .profile input, .profile select {
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    padding: 20px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile-photo {
+    width: 50px;
+    height: 50px;
+    background-color: #333;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.skills, .rating {
+    margin: 10px 0;
+}
+
+.request-btn, button {
+    background-color: #006d77;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.request-btn:disabled, button:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+}
+
+.pagination {
+    margin: 20px 0;
+}
+
+.pagination button {
+    background-color: #006d77;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Swap Platform</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .header a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .header select, .header input, .profile input, .profile select {
+            padding: 5px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-photo {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .skills, .rating {
+            margin: 10px 0;
+        }
+
+        .request-btn, button {
+            background-color: #006d77;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .request-btn:disabled, button:disabled {
+            background-color: #333;
+            cursor: not-allowed;
+        }
+
+        .pagination {
+            margin: 20px 0;
+        }
+
+        .pagination button {
+            background-color: #006d77;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .role-label {
+            font-style: italic;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Skill Swap Platform</h1>
+            <div th:if="${loggedInUser != null}">
+                <a href="/profile">Profile</a>
+                <a href="/swap-request-accept">Swap Request</a>
+                <a href="/index">Home</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+            <div th:if="${loggedInUser == null}">
+                <a href="/login">Login</a>
+            </div>
+        </div>
+        <h2>Swap Requests</h2>
+        <div th:if="${requests.size() == 0}" style="color: #ff4444; font-style: italic;">No swap requests available.</div>
+        <div class="profile" th:each="request : ${requests}">
+            <div>
+                <p th:text="'Name: ' + ${request.requester.name}"></p>
+                <p th:text="'Skills Offered: ' + ${request.offeredSkill}"></p>
+                <p th:text="'Skills Wanted: ' + ${request.wantedSkill}"></p>
+                <p th:text="'Status: ' + ${request.status}"></p>
+                <p class="role-label" th:text="${request.receiver.id == loggedInUser.id ? 'Received Request' : 'Sent Request'}"></p>
+                <form th:if="${request.status == 'Pending' and request.receiver.id == loggedInUser.id}" method="post" action="/api/swap/accept">
+                    <input type="hidden" name="requestId" th:value="${request.id}">
+                    <button type="submit" class="request-btn">Accept</button>
+                </form>
+                <form th:if="${request.status == 'Pending' and request.receiver.id == loggedInUser.id}" method="post" action="/api/swap/reject">
+                    <input type="hidden" name="requestId" th:value="${request.id}">
+                    <button type="submit" class="request-btn">Reject</button>
+                </form>
+                <p th:text="'Rating: ' + ${request.rating} + '/5'"></p>
+            </div>
+        </div>
+        <div class="pagination">
+            <button th:onclick="'changePage(-1)'"><</button>
+            <span>1 / 3</span>
+            <button th:onclick="'changePage(1)'">></button>
+        </div>
+    </div>
+    <script src="/script.js"></script>
+</body>
+</html>

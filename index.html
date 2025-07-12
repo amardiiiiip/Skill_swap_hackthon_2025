@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Swap Platform</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .header a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .header select, .header input, .profile input, .profile select {
+            padding: 5px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-photo {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .skills, .rating {
+            margin: 10px 0;
+        }
+
+        .request-btn, button {
+            background-color: #006d77;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .request-btn:disabled, button:disabled {
+            background-color: #333;
+            cursor: not-allowed;
+        }
+
+        .pagination {
+            margin: 20px 0;
+        }
+
+        .pagination button {
+            background-color: #006d77;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .no-users {
+            color: #ff4444;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Skill Swap Platform</h1>
+            <div>
+                <div th:if="${loggedInUser == null}">
+                    <a href="/login">Login</a>
+                </div>
+                <div th:if="${loggedInUser != null}">
+                    <a href="/profile">Profile</a>
+                    <a href="/swap-request-accept">Swap Request</a>
+                    <a href="/index">Home</a>
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+                <select>
+                    <option>Availability</option>
+                    <option>Available</option>
+                    <option>Unavailable</option>
+                </select>
+            </div>
+        </div>
+
+        <div th:if="${users.size() > 0}" th:each="user : ${users}" class="profile" th:onclick="'window.location.href=\'/swap-request/' + ${user.id} + '\''">
+            <div class="profile-photo"></div>
+            <div class="skills">
+                <p th:text="'Name: ' + ${user.name}"></p>
+                <p th:text="'Skills Offered: ' + ${user.skillsOffered}"></p>
+                <p th:text="'Skills Wanted: ' + ${user.skillsWanted}"></p>
+                <p th:text="'Location: ' + ${user.location}"></p>
+            </div>
+            <div class="rating" th:text="'Rating: ' + ${user.rating} + '/5'"></div>
+            <button class="request-btn" th:disabled="${user.availability != 'Available'}">Request</button>
+        </div>
+        <div th:if="${users.size() == 0}" class="no-users">No public users available at the moment.</div>
+
+        <div th:if="${showLoggedInUserCard and loggedInUser != null}" class="profile" style="margin-top: 20px;">
+            <div class="profile-photo"></div>
+            <div class="skills">
+                <p th:text="'Name: ' + ${loggedInUser.name}"></p>
+                <p th:text="'Skills Offered: ' + ${loggedInUser.skillsOffered}"></p>
+                <p th:text="'Skills Wanted: ' + ${loggedInUser.skillsWanted}"></p>
+                <p th:text="'Location: ' + ${loggedInUser.location}"></p>
+            </div>
+            <div class="rating" th:text="'Rating: ' + ${loggedInUser.rating} + '/5'"></div>
+            <button class="request-btn" th:disabled="${loggedInUser.availability != 'Available'}" onclick="alert('This is your profile!')">View</button>
+        </div>
+
+        <div class="pagination">
+            <button th:onclick="'changePage(-1)'" th:disabled="${currentPage == 1}"><</button>
+            <span th:text="${currentPage} + ' / ' + ${totalPages}"></span>
+            <button th:onclick="'changePage(1)'" th:disabled="${currentPage == totalPages}">></button>
+        </div>
+    </div>
+    <script src="/script.js"></script>
+</body>
+</html>

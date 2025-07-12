@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Swap Platform</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .header a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .header select, .header input, .profile input, .profile select {
+            padding: 5px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-photo {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .skills, .rating {
+            margin: 10px 0;
+        }
+
+        .request-btn, button {
+            background-color: #006d77;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .request-btn:disabled, button:disabled {
+            background-color: #333;
+            cursor: not-allowed;
+        }
+
+        .pagination {
+            margin: 20px 0;
+        }
+
+        .pagination button {
+            background-color: #006d77;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Skill Swap Platform</h1>
+            <div>
+                <a href="/profile">Profile</a>
+                <a href="/swap-request-accept">Swap Request</a>
+                <a href="/index">Home</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+        <h2>Profile</h2>
+        <div class="profile">
+            <form id="profileForm" th:action="@{/api/users/update}" method="post">
+                <label>Name:</label>
+                <input type="text" name="name" th:value="${loggedInUser.name}" required>
+                <label>Location:</label>
+                <input type="text" name="location" th:value="${loggedInUser.location}">
+                <label>Skills Offered:</label>
+                <input type="text" name="skillsOffered" th:value="${loggedInUser.skillsOffered}">
+                <label>Skills Wanted:</label>
+                <input type="text" name="skillsWanted" th:value="${loggedInUser.skillsWanted}">
+                <label>Availability:</label>
+                <select name="availability">
+                    <option th:selected="${loggedInUser.availability == 'Available'}" value="Available">Available</option>
+                    <option th:selected="${loggedInUser.availability == 'Unavailable'}" value="Unavailable">Unavailable</option>
+                </select>
+                <label>Profile Visibility:</label>
+                <select name="profileVisibility">
+                    <option th:selected="${loggedInUser.profileVisibility == 'Public'}" value="Public">Public</option>
+                    <option th:selected="${loggedInUser.profileVisibility == 'Private'}" value="Private">Private</option>
+                </select>
+                <button type="submit">Save</button>
+                <button type="button" onclick="window.location.href='/index'">Discard</button>
+            </form>
+        </div>
+
+        <div th:if="${loggedInUser != null}" class="profile" style="margin-top: 20px;">
+            <div class="profile-photo"></div>
+            <div class="skills">
+                <p th:text="'Name: ' + ${loggedInUser.name}"></p>
+                <p th:text="'Skills Offered: ' + ${loggedInUser.skillsOffered}"></p>
+                <p th:text="'Skills Wanted: ' + ${loggedInUser.skillsWanted}"></p>
+                <p th:text="'Location: ' + ${loggedInUser.location}"></p>
+            </div>
+            <div class="rating" th:text="'Rating: ' + ${loggedInUser.rating} + '/5'"></div>
+            <button class="request-btn" onclick="alert('This is your profile!')">View</button>
+        </div>
+    </div>
+    <script src="/script.js"></script>
+</body>
+</html>
